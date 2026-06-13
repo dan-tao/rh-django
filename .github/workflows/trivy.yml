@@ -1,0 +1,37 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Trivy Scan (Security & Licenses)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  security-events: write
+  contents: read
+
+jobs:
+  trivy-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability and license scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs' # Escanea el sistema de archivos
+          scan-ref: '.'
+          scanners: 'vuln,license' # <--- ¡Aquí le pides ambos análisis!
+          severity: 'CRITICAL,HIGH'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
