@@ -103,9 +103,6 @@ jobs:
         with:
           python-version: '3.14'
 
-      - name: Install Setuptools (Required for CRDA CLI compatibility)
-        run: pip install setuptools
-
       # https://github.com/redhat-actions/openshift-tools-installer/blob/main/README.md
       - name: Install CRDA CLI
         uses: redhat-actions/openshift-tools-installer@v1
@@ -132,3 +129,4 @@ jobs:
           crda_key: ${{ secrets.CRDA_KEY }}           # Either use crda_key or snyk_token
           # snyk_token: ${{ secrets.SNYK_TOKEN }}
           # upload_artifact: false                    # Set this to false to skip artifact upload
+          install_cmd: "pip install setuptools -r requirements.txt"
