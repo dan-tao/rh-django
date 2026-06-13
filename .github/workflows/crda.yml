@@ -110,7 +110,7 @@ jobs:
           source: github
           github_pat: ${{ github.token }}
           # Choose the desired version of the CRDA CLI
-          crda: "latest"
+          crda: "0.4.0"  # ← Cambia "latest" a "0.4.0"
 
       # Instalar setuptools y dependencias antes de ejecutar CRDA
       - name: Install Python dependencies
