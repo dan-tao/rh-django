@@ -42,5 +42,5 @@ jobs:
           scan-ref: '.'
           scanners: 'license'
           format: 'table'
-          ignored-licenses: 'MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, PSF-2.0, MPL, Python-2.0'
+          ignored-licenses: 'MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, PSF-2.0, MPL-2.0, Python-2.0'
           exit-code: 1
