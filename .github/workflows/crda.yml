@@ -137,4 +137,4 @@ jobs:
           # upload_artifact: false                    # Set this to false to skip artifact upload
           # Opcional: Le decimos explícitamente cuál es nuestro manifiesto
           manifest_file: "requirements.txt"
-          skip_dependencies: true  # ← AGREGA ESTO
+          install_cmd: "pip install setuptools && pip install --no-deps -r requirements.txt"
