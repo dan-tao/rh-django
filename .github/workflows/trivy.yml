@@ -3,30 +3,32 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Trivy Scan (Security & Licenses)
+name: Trivy License Compliance
 
 on:
   workflow_dispatch:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 permissions:
-  security-events: write
   contents: read
 
 jobs:
-  trivy-scan:
+  license-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Trivy vulnerability and license scanner
+      # PASO 1: Sigue subiendo las vulnerabilidades a la pestaña Security
+      - name: Run Trivy vulnerability scanner (SARIF)
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'fs' # Escanea el sistema de archivos
+          scan-type: 'fs'
           scan-ref: '.'
-          scanners: 'vuln,license' # <--- ¡Aquí le pides ambos análisis!
+          scanners: 'vuln'
           severity: 'CRITICAL,HIGH'
           format: 'sarif'
           output: 'trivy-results.sarif'
@@ -35,3 +37,20 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy-results.sarif'
+          
+      # PASO 2: Imprime la tabla de licencias en la consola (Fácil de leer)
+      - name: Scan for Forbidden Licenses
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'license'
+          format: 'table' # Te muestra la tabla en los logs para que veas el culpable
+          
+          # 1. Definimos qué licencias SÍ están permitidas en nuestro proyecto
+          # Nota: Agregamos las más comunes y seguras de Python (MIT, Apache, BSD, PSF)
+          ignored-licenses: 'MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, PSF-2.0, Python-2.0'
+          
+          # 2. Le decimos a Trivy que si encuentra una licencia FUERA de esa lista,
+          # devuelva un código de error 1 para detener el pipeline de GitHub.
+          exit-code: 1
