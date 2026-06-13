@@ -115,9 +115,8 @@ jobs:
       # Instalar setuptools y dependencias antes de ejecutar CRDA
       - name: Install Python dependencies
         run: |
-          python -m pip install --upgrade pip setuptools wheel
-          python -m ensurepip --upgrade
-          pip install -r requirements.txt
+          pip install --upgrade pip
+          pip install setuptools wheel
 
       ######################################################################################
       # https://github.com/redhat-actions/crda/blob/main/README.md
@@ -138,3 +137,4 @@ jobs:
           # upload_artifact: false                    # Set this to false to skip artifact upload
           # Opcional: Le decimos explícitamente cuál es nuestro manifiesto
           manifest_file: "requirements.txt"
+          skip_dependencies: true  # ← AGREGA ESTO
