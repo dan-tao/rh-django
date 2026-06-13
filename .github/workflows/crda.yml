@@ -103,6 +103,9 @@ jobs:
         with:
           python-version: '3.14'
 
+      - name: Install Setuptools (Required for CRDA CLI compatibility)
+        run: pip install setuptools
+
       # https://github.com/redhat-actions/openshift-tools-installer/blob/main/README.md
       - name: Install CRDA CLI
         uses: redhat-actions/openshift-tools-installer@v1
