@@ -129,4 +129,6 @@ jobs:
           crda_key: ${{ secrets.CRDA_KEY }}           # Either use crda_key or snyk_token
           # snyk_token: ${{ secrets.SNYK_TOKEN }}
           # upload_artifact: false                    # Set this to false to skip artifact upload
-          install_cmd: "pip install setuptools -r requirements.txt"
+          install_cmd: "pip install setuptools && pip install -r requirements.txt"
+          # Opcional: Le decimos explícitamente cuál es nuestro manifiesto
+          manifest_file: "requirements.txt"
