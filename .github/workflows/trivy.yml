@@ -1,0 +1,46 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Trivy License Compliance
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  license-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 1. Preparamos el entorno de Python (Usando tu versión)
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+
+      # 2. Instalamos las dependencias para que existan físicamente en 'site-packages'
+      - name: Install Project Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 3. Ahora sí, Trivy encontrará la ruta 'site-packages' del sistema
+      - name: Scan for Forbidden Licenses
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          scanners: 'license'
+          format: 'table'
+          ignored-licenses: 'MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, PSF-2.0, Python-2.0'
+          exit-code: 1
