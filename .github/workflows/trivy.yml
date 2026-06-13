@@ -22,20 +22,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-          
-      # PASO 1: Imprime la tabla de licencias en la consola (Fácil de leer)
+      # 1. Preparamos el entorno de Python (Usando tu versión)
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+
+      # 2. Instalamos las dependencias para que existan físicamente en 'site-packages'
+      - name: Install Project Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 3. Ahora sí, Trivy encontrará la ruta 'site-packages' del sistema
       - name: Scan for Forbidden Licenses
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
           scan-ref: '.'
           scanners: 'license'
-          format: 'table' # Te muestra la tabla en los logs para que veas el culpable
-          
-          # 1. Definimos qué licencias SÍ están permitidas en nuestro proyecto
-          # Nota: Agregamos las más comunes y seguras de Python (MIT, Apache, BSD, PSF)
+          format: 'table'
           ignored-licenses: 'MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, PSF-2.0, Python-2.0'
-          
-          # 2. Le decimos a Trivy que si encuentra una licencia FUERA de esa lista,
-          # devuelva un código de error 1 para detener el pipeline de GitHub.
           exit-code: 1
