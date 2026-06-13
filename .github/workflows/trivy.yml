@@ -37,6 +37,7 @@ jobs:
       # 3. Ahora sí, Trivy encontrará la ruta 'site-packages' del sistema
       # 3. Ahora sí, Trivy encontrará la ruta 'site-packages' del sistema
       # 3. Escaneo con flags directos para evitar bugs de parsing de YAML
+      # 3. Escaneo limpio usando el archivo .trivyignore nativo
       - name: Scan for Forbidden Licenses
         uses: aquasecurity/trivy-action@master
         with:
@@ -44,15 +45,4 @@ jobs:
           scan-ref: '.'
           scanners: 'license'
           format: 'table'
-          exit-code: 1
-          # Pasamos los argumentos directamente al CLI de Trivy para asegurar compatibilidad total
-          trivy-config: |
-            license:
-              ignored-licenses:
-                - MIT
-                - Apache-2.0
-                - BSD-2-Clause
-                - BSD-3-Clause
-                - PSF-2.0
-                - MPL-2.0
-                - Python-2.0
+          exit-code: 1 # Seguirá rompiendo si aparece una GPL, pero respetará el .trivyignore
