@@ -22,23 +22,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # PASO 1: Sigue subiendo las vulnerabilidades a la pestaña Security
-      - name: Run Trivy vulnerability scanner (SARIF)
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          scanners: 'vuln'
-          severity: 'CRITICAL,HIGH'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-
-      - name: Upload results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: 'trivy-results.sarif'
           
-      # PASO 2: Imprime la tabla de licencias en la consola (Fácil de leer)
+      # PASO 1: Imprime la tabla de licencias en la consola (Fácil de leer)
       - name: Scan for Forbidden Licenses
         uses: aquasecurity/trivy-action@master
         with:
